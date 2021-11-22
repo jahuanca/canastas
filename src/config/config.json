@@ -1,0 +1,35 @@
+{
+  "development": {
+    "username": "AgvDeveloper",
+    "password": "Agv2021++",
+    "database": "AGV_CONTROLES",
+    "host": "64.150.187.45",
+    "dialect": "mssql",
+    "operatorsAliases": false,
+    "logging": false,
+    "dialectOptions": {
+      "multipleStatements": true,
+      "useUTC": false,
+      "options": {
+        "requestTimeout": 1500000
+      }
+    },
+    "timezone": "-05:00"
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "operatorsAliases": false
+  }
+}
