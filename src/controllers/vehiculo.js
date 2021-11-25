@@ -40,7 +40,8 @@ async function createVehiculo(req, res) {
 
 async function updateVehiculo(req, res) {
     let [err, vehiculo] = await get(models.Vehiculo.update({
-        //all fields to update
+        placa: req.body.placa,
+        modelo: req.body.modelo,
 
         accion: 'U',
         accion_usuario: 'Edito un vehiculo.',
@@ -48,7 +49,7 @@ async function updateVehiculo(req, res) {
         usuario: 0
     }, {
         where: {
-            id: req.body.id, estado: 'A'
+            id: req.body.id, /* estado: 'A' */
         },
         individualHooks: true,
         validate: false

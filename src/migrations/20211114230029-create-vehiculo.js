@@ -8,7 +8,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      placa: { type: Sequelize.STRING, allowNull: true, validate: { notEmpty: true, len: [1, 200] } },
+      placa: { type: Sequelize.STRING, unique: true, allowNull: true, validate: { notEmpty: true, len: [1, 200] } },
       modelo: { type: Sequelize.STRING, allowNull: true, validate: { notEmpty: true, len: [1, 200] } },
       fechamod: { type: Sequelize.DATE, allowNull: false, defaultValue: Date.now },
     });

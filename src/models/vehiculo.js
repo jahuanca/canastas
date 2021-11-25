@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   Vehiculo.init({
     //add new parameters
-    placa: {type: DataTypes.STRING, allowNull: false, validate: {notEmpty: true, len: [1,200]}},
+    placa: {type: DataTypes.STRING, unique: true, allowNull: false, validate: {notEmpty: true, len: [1,200]}},
     modelo: {type: DataTypes.STRING, allowNull: false, validate: {notEmpty: true, len: [1,200]}},
     fechamod: {type: DataTypes.DATE, allowNull: false, defaultValue: Date.now},
 

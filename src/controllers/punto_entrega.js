@@ -40,7 +40,8 @@ async function createPunto_Entrega(req,res){
 
 async function updatePunto_Entrega(req,res){
   let [err,punto_entrega]=await get(models.Punto_Entrega.update({
-    //all fields to update
+    nombre: req.body.nombre,
+    descripcion: req.body.descripcion,
     
     accion: 'U',
     accion_usuario: 'Edito un punto_entrega.',
@@ -48,12 +49,12 @@ async function updatePunto_Entrega(req,res){
     usuario: 0
   },{
     where:{
-      id: req.body.id, estado:'A'
+      id: req.body.id, /* estado:'A' */
     },
     individualHooks: true,
     validate: false
   }))
-  if(err) return res.status(500).json({message: `err`})
+  if(err) return res.status(500).json({message: `${err}`})
   if(punto_entrega==null) return res.status(404).json({message: `Punto_Entregas nulos`})
   res.status(200).json(punto_entrega[1][0].dataValues)
 }

@@ -40,7 +40,8 @@ async function createProducto(req,res){
 
 async function updateProducto(req,res){
   let [err,producto]=await get(models.Producto.update({
-    //all fields to update
+    descripcion: req.body.descripcion,
+    unidad: req.body.unidad,
     
     accion: 'U',
     accion_usuario: 'Edito un producto.',
@@ -48,7 +49,7 @@ async function updateProducto(req,res){
     usuario: 0
   },{
     where:{
-      id: req.body.id, estado:'A'
+      id: req.body.id,/*  estado:'A' */
     },
     individualHooks: true,
     validate: false
