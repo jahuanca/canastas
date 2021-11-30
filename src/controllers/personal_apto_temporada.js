@@ -47,7 +47,9 @@ async function createPersonal_Apto_Temporada(req,res){
 }
 
 async function createPersonal_Apto_TemporadaMany(req,res){
+  console.log(req.body);
     let [err,personal_apto_temporada]=await get(models.Personal_Apto_Temporada.bulkCreate(req.body))
+    console.log(err);
     if(err) return res.status(500).json({message: `${err}`})
     if(personal_apto_temporada==null) return res.status(404).json({message: `Personal_Apto_Temporadas nulos`})
     res.status(200).json(personal_apto_temporada)

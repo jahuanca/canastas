@@ -16,12 +16,14 @@ module.exports = (sequelize, DataTypes) => {
     anio: {type: DataTypes.STRING(200), allowNull: false, validate: {notEmpty: true, len: [1,200]}},
     descripcion: {type: DataTypes.STRING(200), allowNull: false, validate: {notEmpty: true, len: [1,200]}},
     periodo: {type: DataTypes.STRING(200), allowNull: false, validate: {notEmpty: true, len: [1,200]}},
-    /* estado: {type: DataTypes.CHAR(1), allowNull: false, defaultValue: 'A',
+    fechainicio: {type: DataTypes.DATE, allowNull: false,},
+    fechafin: {type: DataTypes.DATE, allowNull: false,},
+    estado: {type: DataTypes.CHAR(1), allowNull: false, defaultValue: 'A',
       validate: {notEmpty: true, len: [1,1], isIn: [['A', 'I']], isAlpha: true}
-    }, */
+    },
 
-    /* createdAt: {type: DataTypes.DATE, allowNull: false, defaultValue: Date.now},
-    updatedAt: {type: DataTypes.DATE, allowNull: true}, */
+    createdAt: {type: DataTypes.DATE, allowNull: false, defaultValue: Date.now},
+    updatedAt: {type: DataTypes.DATE, allowNull: true}, 
 
     accion: {type: DataTypes.VIRTUAL},
     usuario: {type: DataTypes.VIRTUAL},
@@ -29,7 +31,6 @@ module.exports = (sequelize, DataTypes) => {
     accion_usuario: {type: DataTypes.VIRTUAL}
   }, {
     sequelize,
-    timestamps: false,
     modelName: 'Temporada',
     freezeTableName: true,
     tableName: 'Temporada'

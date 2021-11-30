@@ -18,12 +18,12 @@ module.exports = (sequelize, DataTypes) => {
     fecha: {type: DataTypes.DATEONLY, allowNull: false, defaultValue: Date.now},
     hora: {type: DataTypes.TIME, allowNull: false, defaultValue: Date.now},
 
-    /* estado: {type: DataTypes.CHAR(1), allowNull: false, defaultValue: 'A',
+    estado: {type: DataTypes.CHAR(1), allowNull: false, defaultValue: 'A',
       validate: {notEmpty: true, len: [1,1], isIn: [['A', 'I']], isAlpha: true}
-    }, */
+    },
 
-    /* createdAt: {type: DataTypes.DATE, allowNull: false, defaultValue: Date.now},
-    updatedAt: {type: DataTypes.DATE, allowNull: true}, */
+    createdAt: {type: DataTypes.DATE, allowNull: false, defaultValue: Date.now},
+    updatedAt: {type: DataTypes.DATE, allowNull: true}, 
 
     accion: {type: DataTypes.VIRTUAL},
     usuario: {type: DataTypes.VIRTUAL},
@@ -33,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Vehiculo_Temporada',
     freezeTableName: true,
-    timestamps: false,
     tableName: 'VehiculoTemporada'
   });
   return Vehiculo_Temporada;

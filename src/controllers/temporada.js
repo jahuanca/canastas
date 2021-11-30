@@ -3,10 +3,10 @@ const models = require('../models')
 
 async function getTemporadas(req, res) {
   let [err, temporadas] = await get(models.Temporada.findAll({
-    /* where:{estado: 'A'}, */
+    where:{estado: 'A'},
     include: [{ all: true }]
   }))
-  console.log(err)
+  console.log(err);
   if (err) return res.status(500).json({ message: `${err}` })
   if (temporadas == null) return res.status(404).json({ message: `Temporadas nulos` })
   res.status(200).json(temporadas)
@@ -24,11 +24,14 @@ async function getTemporada(req, res) {
 }
 
 async function createTemporada(req, res) {
+  console.log(req.body);
   let [err, temporada] = await get(models.Temporada.create({
     anio: req.body.anio,
     periodo: req.body.periodo,
     descripcion: req.body.descripcion,
     idproducto: req.body.idproducto,
+    fechainicio: req.body.fechainicio,
+    fechafin: req.body.fechafin,
 
     accion: 'I',
     accion_usuario: 'Creo un nuevo temporada.',

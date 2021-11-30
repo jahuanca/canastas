@@ -19,7 +19,13 @@ module.exports = (sequelize, DataTypes) => {
 
     fecha: {type: DataTypes.DATEONLY, allowNull: false, defaultValue: Date.now},
     hora: {type: DataTypes.TIME, allowNull: false, defaultValue: Date.now},
-    apto: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true},
+    apto: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false},
+    estado: {type: DataTypes.CHAR(1), allowNull: false, defaultValue: 'A',
+      validate: {notEmpty: true, len: [1,1], isIn: [['A', 'I']], isAlpha: true}
+    },
+
+    createdAt: {type: DataTypes.DATE, allowNull: false, defaultValue: new Date()},
+    updatedAt: {type: DataTypes.DATE, allowNull: true}, 
 
 
     accion: {type: DataTypes.VIRTUAL},
@@ -30,7 +36,6 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Personal_Vehiculo',
     freezeTableName: true,
-    timestamps: false,
     tableName: 'PersonalVehiculo'
   });
   return Personal_Vehiculo;

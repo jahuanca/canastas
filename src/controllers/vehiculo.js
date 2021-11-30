@@ -3,7 +3,7 @@ const models = require('../models')
 
 async function getVehiculos(req, res) {
     let [err, vehiculos] = await get(models.Vehiculo.findAll({
-        /* where:{estado: 'A'}, */
+        where:{estado: 'A'},
         include: [{ all: true }]
     }))
     if (err) return res.status(500).json({ message: `${err}` })

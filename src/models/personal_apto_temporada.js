@@ -14,12 +14,12 @@ module.exports = (sequelize, DataTypes) => {
     idusuario: { type: DataTypes.INTEGER, allowNull: true, },
     codigosap: { type: DataTypes.STRING, allowNull: true, },
     idestado: { type: DataTypes.INTEGER, allowNull: true, },
-    /* estado: {type: DataTypes.CHAR(1), allowNull: false, defaultValue: 'A',
+    estado: {type: DataTypes.CHAR(1), allowNull: false, defaultValue: 'A',
       validate: {notEmpty: true, len: [1,1], isIn: [['A', 'I']], isAlpha: true}
-    }, */
+    },
 
-    /* createdAt: {type: DataTypes.DATE, allowNull: false, defaultValue: Date.now},
-    updatedAt: {type: DataTypes.DATE, allowNull: true}, */
+    createdAt: {type: DataTypes.DATE, allowNull: false, defaultValue: new Date()},
+    updatedAt: {type: DataTypes.DATE, allowNull: true}, 
 
     accion: { type: DataTypes.VIRTUAL },
     usuario: { type: DataTypes.VIRTUAL },
@@ -29,7 +29,6 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Personal_Apto_Temporada',
     freezeTableName: true,
-    timestamps: false,
     tableName: 'PersonalAptoTemporada'
   });
   return Personal_Apto_Temporada;

@@ -3,10 +3,10 @@ const models=require('../models')
 
 async function getProductos(req,res){
   let [err,productos]=await get(models.Producto.findAll({
-    /* where:{estado: 'A'}, */
+    where:{estado: 'A'},
     include: [{all: true}]
   }))
-  if(err) return res.status(500).json({message: `err`})
+  if(err) return res.status(500).json({message: `${err}`})
   if(productos==null) return res.status(404).json({message: `Productos nulos`})
   res.status(200).json(productos)
 }

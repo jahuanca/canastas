@@ -12,16 +12,15 @@ module.exports = (sequelize, DataTypes) => {
     //add new parameters
     placa: {type: DataTypes.STRING, unique: true, allowNull: false, validate: {notEmpty: true, len: [1,200]}},
     modelo: {type: DataTypes.STRING, allowNull: false, validate: {notEmpty: true, len: [1,200]}},
-    fechamod: {type: DataTypes.DATE, allowNull: false, defaultValue: Date.now},
 
     /* descripcion: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
-    observacion: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
+    observacion: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},*/
     estado: {type: DataTypes.CHAR(1), allowNull: false, defaultValue: 'A',
       validate: {notEmpty: true, len: [1,1], isIn: [['A', 'I']], isAlpha: true}
     },
 
     createdAt: {type: DataTypes.DATE, allowNull: false, defaultValue: Date.now},
-    updatedAt: {type: DataTypes.DATE, allowNull: true}, */
+    updatedAt: {type: DataTypes.DATE, allowNull: true}, 
 
     accion: {type: DataTypes.VIRTUAL},
     usuario: {type: DataTypes.VIRTUAL},
@@ -31,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Vehiculo',
     freezeTableName: true,
-    timestamps: false,
     tableName: 'Vehiculo'
   });
   return Vehiculo;
