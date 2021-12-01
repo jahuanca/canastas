@@ -79,6 +79,7 @@ async function deleteVehiculo_Temporada(req,res){
 
 async function createAllVehiculo_Temporada(req, res) {
     try {
+      
         const result = await models.sequelize.transaction(async (t) => {
             const tarea = await models.Vehiculo_Temporada.create({
                 idtemporada: req.body.idtemporada,

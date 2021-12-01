@@ -4,10 +4,27 @@ const _ = require('lodash')
 
 async function getPersonal_Vehiculos(req, res) {
   let [err, personal_vehiculos] = await get(models.Personal_Vehiculo.findAll({
-    /* where:{estado: 'A'}, */
-    include: [{ all: true }]
+    where: {estado: 'A'},
+    include: [{model: models.Vehiculo_Temporada}, {model: models.Personal_Empresa}]
   }))
-  if (err) return res.status(500).json({ message: `{err}` })
+  if (err) return res.status(500).json({ message: `${err}` })
+  if (personal_vehiculos == null) return res.status(404).json({ message: `Personal_Vehiculos nulos` })
+  res.status(200).json(personal_vehiculos)
+}
+
+async function getPersonal_VehiculosByTemporada(req, res) {
+  let [err, personal_vehiculos] = await get(models.Personal_Vehiculo.findAll({
+    attributes: [
+      'codigosap',
+      [models.Sequelize.col('Vehiculo_Temporada.idtemporada'), 'idtemporada'],
+      [models.Sequelize.col('Personal_Empresa.codigoempresa'), 'codigoempresa'],
+      [models.Sequelize.col('Personal_Empresa.nrodocumento'), 'nrodocumento'],
+    ],
+    raw: true,
+    include: [{model: models.Vehiculo_Temporada, attributes: []}, {model: models.Personal_Empresa, attributes: []}]
+  }))
+  personal_vehiculos=_.groupBy(personal_vehiculos, 'idtemporada');
+  if (err) return res.status(500).json({ message: `${err}` })
   if (personal_vehiculos == null) return res.status(404).json({ message: `Personal_Vehiculos nulos` })
   res.status(200).json(personal_vehiculos)
 }
@@ -137,6 +154,7 @@ function get(promise) {
 
 module.exports = {
   getPersonal_Vehiculos,
+  getPersonal_VehiculosByTemporada,
   getPersonal_Vehiculo,
   byRange,
   createPersonal_Vehiculo,
