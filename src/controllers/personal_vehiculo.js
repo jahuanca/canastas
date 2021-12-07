@@ -1,11 +1,12 @@
 'use strict'
 const models = require('../models')
+const moment = require('moment')
 const _ = require('lodash')
 
 async function getPersonal_Vehiculos(req, res) {
   let [err, personal_vehiculos] = await get(models.Personal_Vehiculo.findAll({
-    where: {estado: 'A'},
-    include: [{model: models.Vehiculo_Temporada}, {model: models.Personal_Empresa}]
+    where: { estado: 'A' },
+    include: [{ model: models.Vehiculo_Temporada }, { model: models.Personal_Empresa }]
   }))
   if (err) return res.status(500).json({ message: `${err}` })
   if (personal_vehiculos == null) return res.status(404).json({ message: `Personal_Vehiculos nulos` })
@@ -21,29 +22,49 @@ async function getPersonal_VehiculosByTemporada(req, res) {
       [models.Sequelize.col('Personal_Empresa.nrodocumento'), 'nrodocumento'],
     ],
     raw: true,
-    include: [{model: models.Vehiculo_Temporada, attributes: []}, {model: models.Personal_Empresa, attributes: []}]
+    include: [{ model: models.Vehiculo_Temporada, attributes: [] }, { model: models.Personal_Empresa, attributes: [] }]
   }))
-  personal_vehiculos=_.groupBy(personal_vehiculos, 'idtemporada');
+  personal_vehiculos = _.groupBy(personal_vehiculos, 'idtemporada');
   if (err) return res.status(500).json({ message: `${err}` })
   if (personal_vehiculos == null) return res.status(404).json({ message: `Personal_Vehiculos nulos` })
   res.status(200).json(personal_vehiculos)
 }
 
 async function byRange(req, res) {
+  console.log(req.body);
+  let where;
+  if (req.body.idpuntoentrega == -1) {
+    where = {
+      estado: 'A',
+      fecha: {
+        [models.Sequelize.Op.between]: [moment(req.body.inicio), moment(req.body.fin)]
+      }
+
+    };
+  } else {
+    where = {
+      estado: 'A', idpuntoentrega: req.body.idpuntoentrega, 
+      fecha: {
+        [models.Sequelize.Op.between]: [moment(req.body.inicio), moment(req.body.fin)]
+      }
+    };
+  }
+
   let [err, personal_vehiculos] = await get(models.Personal_Vehiculo.findAll({
-    where: { idpuntoentrega: req.body.idpuntoentrega },
+    where,
     raw: true,
     attributes: [[models.Sequelize.col('Vehiculo_Temporada.Temporada.id'), 'idtemporada'],
     [models.Sequelize.col('Personal_Empresa.apellidopaterno'), 'apellidopaterno'],
     [models.Sequelize.col('Personal_Empresa.apellidomaterno'), 'apellidomaterno'],
     [models.Sequelize.col('Personal_Empresa.nombres'), 'nombres'],
+    [models.Sequelize.col('Personal_Empresa.nrodocumento'), 'nrodocumento'],
     [models.Sequelize.col('Punto_Entrega.nombre'), 'puntoentrega'],
     [models.Sequelize.col('Vehiculo_Temporada.placa'), 'placa'],
     [models.Sequelize.col('Vehiculo_Temporada.Temporada.anio'), 'anio'],
     [models.Sequelize.col('Vehiculo_Temporada.Temporada.periodo'), 'periodo'],
     [models.Sequelize.col('Vehiculo_Temporada.Temporada.fechainicio'), 'fechainicio'],
     [models.Sequelize.col('Vehiculo_Temporada.Temporada.fechafin'), 'fechafin'],
-    'id', 'codigosap', 'fecha', 'hora', 'apto'],
+      'id', 'codigosap', 'fecha', 'hora', 'apto'],
     include: [{ model: models.Personal_Empresa, attributes: [] }, { model: models.Punto_Entrega, attributes: [] },
     {
       model: models.Vehiculo_Temporada, attributes: [],
@@ -51,11 +72,12 @@ async function byRange(req, res) {
     }]
   }))
 
+  /* console.log(err); */
+
   if (err) return res.status(500).json({ message: `${err}` })
   if (personal_vehiculos == null) return res.status(404).json({ message: `Personal_Vehiculos nulos` })
 
   let codigos = _.map(personal_vehiculos, _.partialRight(_.pick, [/* 'codigosap',  */'idtemporada']));
-  console.log(codigos);
 
   let [err2, personal_apto_temporada] = await get(models.Personal_Apto_Temporada.findAll({
     where: codigos
