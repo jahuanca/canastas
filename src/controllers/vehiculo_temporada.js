@@ -78,6 +78,17 @@ async function deleteVehiculo_Temporada(req,res){
 }
 
 async function createAllVehiculo_Temporada(req, res) {
+
+    if(req.body.idvehiculo == null){
+      let [err,vehiculo]=await get(models.Vehiculo.findOne({
+        where: {placa: req.body.placa}
+      }))
+      if(err) return res.status(500).json({message: `${err}`})
+      if(vehiculo==null) return res.status(404).json({message: `No se encontro ningun vehiculo con dicha placa.`})
+      console.log(vehiculo);
+      req.body.idvehiculo=vehiculo.id;
+    }
+
     try {
       
         const result = await models.sequelize.transaction(async (t) => {
