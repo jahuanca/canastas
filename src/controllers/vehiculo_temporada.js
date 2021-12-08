@@ -85,7 +85,6 @@ async function createAllVehiculo_Temporada(req, res) {
       }))
       if(err) return res.status(500).json({message: `${err}`})
       if(vehiculo==null) return res.status(404).json({message: `No se encontro ningun vehiculo con dicha placa.`})
-      console.log(vehiculo);
       req.body.idvehiculo=vehiculo.id;
     }
 
