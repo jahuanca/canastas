@@ -16,14 +16,16 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
-/* Sequelize.DATE.prototype._stringify = function _stringify(date, options) {
-  
-  return this._applyTimezone(date, options).format('YYYY-MM-DD HH:mm:ss.SSS');
-}; */
 DataTypes.DATE.prototype._stringify = function _stringify(date, options) {
   date = this._applyTimezone(date, options)
   return date.format('YYYY-MM-DD HH:mm:ss.SSS')
 }
+
+
+/* DataTypes.DATEONLY.prototype._stringify = function _stringify(date, options) {
+  date = this._applyTimezone(date, options)
+  return date.format('YYYY-MM-DD')
+} */
 
 
 fs

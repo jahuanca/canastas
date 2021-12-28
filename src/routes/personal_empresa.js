@@ -16,6 +16,7 @@ const auth=require('../middlewares/auth') */
  *        description: A successful response
  */
 router.get('/',personal_empresa.getPersonal_Empresas)
+router.get('/bloqueado',personal_empresa.getPersonal_EmpresasBloqueado)
 router.get('/subdivision/:id',personal_empresa.getPersonal_EmpresaBySubdivision)
 router.get('/id/:id',personal_empresa.getPersonal_Empresa)
 router.post('/create',personal_empresa.createPersonal_Empresa)

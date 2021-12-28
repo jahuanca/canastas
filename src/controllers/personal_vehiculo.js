@@ -37,7 +37,7 @@ async function byRange(req, res) {
     where = {
       estado: 'A',
       fecha: {
-        [models.Sequelize.Op.between]: [moment(req.body.inicio), moment(req.body.fin)]
+        [models.Sequelize.Op.between]: [new Date(req.body.inicio).setHours(0,0,0), new Date(req.body.fin).setHours(23,59,59)]
       }
 
     };
@@ -45,39 +45,50 @@ async function byRange(req, res) {
     where = {
       estado: 'A', idpuntoentrega: req.body.idpuntoentrega, 
       fecha: {
-        [models.Sequelize.Op.between]: [moment(req.body.inicio), moment(req.body.fin)]
+        [models.Sequelize.Op.between]: [new Date(req.body.inicio).setHours(0,0,0), new Date(req.body.fin).setHours(23,59,59)]
       }
     };
+  }
+  let wTemporada;
+  if(req.body.idtemporada == -1){
+    wTemporada= {estado: 'A'};
+  }else{
+    wTemporada= {estado: 'A', idtemporada: req.body.idtemporada};
   }
 
   let [err, personal_vehiculos] = await get(models.Personal_Vehiculo.findAll({
     where,
-    raw: true,
-    attributes: [[models.Sequelize.col('Vehiculo_Temporada.Temporada.id'), 'idtemporada'],
-    [models.Sequelize.col('Personal_Empresa.apellidopaterno'), 'apellidopaterno'],
-    [models.Sequelize.col('Personal_Empresa.apellidomaterno'), 'apellidomaterno'],
-    [models.Sequelize.col('Personal_Empresa.nombres'), 'nombres'],
-    [models.Sequelize.col('Personal_Empresa.nrodocumento'), 'nrodocumento'],
-    [models.Sequelize.col('Punto_Entrega.nombre'), 'puntoentrega'],
-    [models.Sequelize.col('Vehiculo_Temporada.placa'), 'placa'],
-    [models.Sequelize.col('Vehiculo_Temporada.Temporada.anio'), 'anio'],
-    [models.Sequelize.col('Vehiculo_Temporada.Temporada.periodo'), 'periodo'],
-    [models.Sequelize.col('Vehiculo_Temporada.Temporada.fechainicio'), 'fechainicio'],
-    [models.Sequelize.col('Vehiculo_Temporada.Temporada.fechafin'), 'fechafin'],
-      'id', 'codigosap', 'fecha', 'hora', 'apto'],
+    raw: false,
+    attributes: [
+      [models.Sequelize.col('Vehiculo_Temporada.Temporada.id'), 'idtemporada'],
+      [models.Sequelize.col('Vehiculo_Temporada.Temporada.Producto.id'), 'idproducto'],
+      [models.Sequelize.col('Vehiculo_Temporada.Temporada.Producto.descripcion'), 'producto'],
+      [models.Sequelize.col('Vehiculo_Temporada.Temporada.descripcion'), 'temporada'],
+      [models.Sequelize.col('Personal_Empresa.apellidopaterno'), 'apellidopaterno'],
+      [models.Sequelize.col('Personal_Empresa.apellidomaterno'), 'apellidomaterno'],
+      [models.Sequelize.col('Personal_Empresa.nombres'), 'nombres'],
+      [models.Sequelize.col('Personal_Empresa.nrodocumento'), 'nrodocumento'],
+      [models.Sequelize.col('Punto_Entrega.nombre'), 'puntoentrega'],
+      [models.Sequelize.col('Vehiculo_Temporada.placa'), 'placa'],
+      [models.Sequelize.col('Vehiculo_Temporada.Temporada.anio'), 'anio'],
+      [models.Sequelize.col('Vehiculo_Temporada.Temporada.periodo'), 'periodo'],
+      /* [models.Sequelize.col('Vehiculo_Temporada.Temporada.fechainicio'), 'fechainicio'],
+      [models.Sequelize.col('Vehiculo_Temporada.Temporada.fechafin'), 'fechafin'], */
+      'id', 'codigosap', 
+      'fecha', 
+      /* [sequelize.fn('COUNT', sequelize.col('hats')), 'fecha'], */
+      'hora'],
     include: [{ model: models.Personal_Empresa, attributes: [] }, { model: models.Punto_Entrega, attributes: [] },
     {
-      model: models.Vehiculo_Temporada, attributes: [],
-      include: [{ model: models.Temporada, attributes: [] }]
+      model: models.Vehiculo_Temporada, attributes: [], where: wTemporada,
+      include: [{ model: models.Temporada, attributes: [], include: [{model: models.Producto, attributes: []}] }]
     }]
   }))
-
-  /* console.log(err); */
-
   if (err) return res.status(500).json({ message: `${err}` })
+  console.log(personal_vehiculos);
   if (personal_vehiculos == null) return res.status(404).json({ message: `Personal_Vehiculos nulos` })
 
-  let codigos = _.map(personal_vehiculos, _.partialRight(_.pick, [/* 'codigosap',  */'idtemporada']));
+  /* let codigos = _.map(personal_vehiculos, _.partialRight(_.pick, ['idtemporada']));
 
   let [err2, personal_apto_temporada] = await get(models.Personal_Apto_Temporada.findAll({
     where: codigos
@@ -95,7 +106,7 @@ async function byRange(req, res) {
     }
   }
   if (err2) return res.status(500).json({ message: `${err2}` })
-  if (personal_apto_temporada == null) return res.status(404).json({ message: `Personal_Apto_Temporada nulos` })
+  if (personal_apto_temporada == null) return res.status(404).json({ message: `Personal_Apto_Temporada nulos` }) */
 
   res.status(200).json(personal_vehiculos)
 }

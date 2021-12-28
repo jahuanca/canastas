@@ -12,6 +12,16 @@ async function getPersonal_Empresas(req,res){
   res.status(200).json(personal_empresas)
 }
 
+async function getPersonal_EmpresasBloqueado(req,res){
+  let [err,personal_empresas]=await get(models.Personal_Empresa.findAll({
+    where:{itemgrupopersonal: 1, bloqueado: true},
+    include: [{all: true}]
+  }))
+  if(err) return res.status(500).json({message: `${err}`})
+  if(personal_empresas==null) return res.status(404).json({message: `Personal_Empresas nulos`})
+  res.status(200).json(personal_empresas)
+}
+
 async function getPersonal_Empresa(req,res){
   let [err,personal_empresa]=await get(models.Personal_Empresa.findOne({
     where:{codigoempresa: req.params.id,},
@@ -52,7 +62,7 @@ async function createPersonal_Empresa(req,res){
 
 async function updatePersonal_Empresa(req,res){
   let [err,personal_empresa]=await get(models.Personal_Empresa.update({
-    //all fields to update
+    bloqueado: req.body.bloqueado,
     
     accion: 'U',
     accion_usuario: 'Edito un personal_empresa.',
@@ -60,7 +70,7 @@ async function updatePersonal_Empresa(req,res){
     usuario: 0
   },{
     where:{
-      id: req.body.id, estado:'A'
+      codigoempresa: req.body.codigoempresa, estado:'A'
     },
     individualHooks: true,
     validate: false
@@ -100,6 +110,7 @@ function get(promise) {
 
 module.exports={
   getPersonal_Empresas,
+  getPersonal_EmpresasBloqueado,
   getPersonal_EmpresaBySubdivision,
   getPersonal_Empresa,
   createPersonal_Empresa,

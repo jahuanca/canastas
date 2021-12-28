@@ -11,10 +11,10 @@
       "multipleStatements": true,
       "useUTC": false,
       "options": {
-        "requestTimeout": 1500000
+        "requestTimeout": 3000000
       }
     },
-    "timezone": "-05:00"
+    "timezone": "+05:00"
   },
   "test": {
     "username": "root",
