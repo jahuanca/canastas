@@ -122,6 +122,17 @@ async function getPersonal_Vehiculo(req, res) {
   res.status(200).json(personal_vehiculo)
 }
 
+async function getPersonal_VehiculoCodigoEmpresa(req, res) {
+  let [err, personal_vehiculo] = await get(models.Personal_Vehiculo.findOne({
+    where: { codigoempresa: req.params.id, estado: 'A' },
+    /* include: [{ all: true }] */
+  }))
+  console.log(err)
+  if (err) return res.status(500).json({ message: `${err}` })
+  if (personal_vehiculo == null) return res.status(404).json({ message: `Personal_Vehiculos nulos` })
+  res.status(200).json(personal_vehiculo)
+}
+
 async function createPersonal_Vehiculo(req, res) {
   let [err, personal_vehiculo] = await get(models.Personal_Vehiculo.create({
     //all fields to insert
@@ -189,6 +200,7 @@ module.exports = {
   getPersonal_Vehiculos,
   getPersonal_VehiculosByTemporada,
   getPersonal_Vehiculo,
+  getPersonal_VehiculoCodigoEmpresa,
   byRange,
   createPersonal_Vehiculo,
   updatePersonal_Vehiculo,

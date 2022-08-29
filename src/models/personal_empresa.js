@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
   };
   Personal_Empresa.init({
     //add new parameters
-    codigoempresa: {type: DataTypes.STRING(200), primaryKey: true, allowNull: true, validate: {notEmpty: true, len: [1,200]}},
+    codigoempresa: {type: DataTypes.STRING(8), primaryKey: true, allowNull: true, validate: {notEmpty: true, len: [1,8]}},
     apellidopaterno: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
     apellidomaterno: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
     nombres: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},

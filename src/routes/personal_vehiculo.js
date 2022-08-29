@@ -18,6 +18,7 @@ const auth=require('../middlewares/auth') */
 router.get('/',personal_vehiculo.getPersonal_Vehiculos)
 router.get('/byTemporada',personal_vehiculo.getPersonal_VehiculosByTemporada)
 router.get('/id/:id',personal_vehiculo.getPersonal_Vehiculo)
+router.get('/codigoempresa/:id',personal_vehiculo.getPersonal_VehiculoCodigoEmpresa)
 router.post('/create',personal_vehiculo.createPersonal_Vehiculo)
 router.post('/range',personal_vehiculo.byRange)
 router.put('/update',personal_vehiculo.updatePersonal_Vehiculo)
