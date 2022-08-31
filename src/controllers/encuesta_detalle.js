@@ -43,6 +43,30 @@ async function getEncuesta_Detalle(req,res){
 }
 
 async function createEncuesta_Detalle(req,res){
+  console.log(req.body)
+  let [err,encuesta_detalle]=await get(models.Encuesta_Detalle.create({
+      idencuesta: req.body.idencuesta,
+      idusuario: req.body.idusuario,
+      opcionmanual: req.body.opcionmanual,
+      fecha: req.body.fecha,
+      hora: req.body.hora,
+      idsubdivision: req.body.idsubdivision,
+      codigoempresa: req.body.codigoempresa,
+      idopcionencuesta: req.body.idopcionencuesta,
+      
+      accion: 'I',
+      accion_usuario: 'Creo un nuevo encuesta_detalle.',
+      ip: req.ip,
+      usuario: 0
+  }))
+  /* console.log(err) */
+  if(err) return res.status(500).json({message: `${err}`})
+  if(encuesta_detalle==null) return res.status(404).json({message: `Encuesta_Detalles nulos`})
+  res.status(200).json(encuesta_detalle)
+}
+
+async function createAllEncuesta_Detalle(req,res){
+  console.log(req.body)
   let [err,encuesta_detalle]=await get(models.Encuesta_Detalle.create({
        //all fields to insert
       
@@ -111,6 +135,7 @@ module.exports={
   getEncuesta_Detalles,
   getEncuesta_Detalle,
   createEncuesta_Detalle,
+  createAllEncuesta_Detalle,
   updateEncuesta_Detalle,
   deleteEncuesta_Detalle
 }

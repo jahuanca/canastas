@@ -19,8 +19,8 @@ module.exports = {
           fechaInicio: Date.now(),
           fechaFin: Date.now(),
           titulo: titulos[index],
-          descripcion:  chance.sentence({words: 5}),
-          observacion: chance.sentence({words: 5}),
+          descripcion:  chance.sentence({words: 8}),
+          observacion: chance.sentence({words: 8}),
           idusuario: 1,
           idtipoencuesta: 1,
         }

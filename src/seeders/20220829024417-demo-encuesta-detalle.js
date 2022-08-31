@@ -10,8 +10,8 @@ module.exports = {
     for (let index = 0; index < 0; index++) {
       elementos.push(
         {
-          descripcion:  chance.sentence({words: 5}),
-          observacion: chance.sentence({words: 5})
+          descripcion:  chance.sentence({words: 7}),
+          observacion: chance.sentence({words: 8})
         }
       )
     }

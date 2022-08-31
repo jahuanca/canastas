@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     idsubdivision: {type: DataTypes.INTEGER, allowNull: false},
     idusuario: {type: DataTypes.INTEGER, allowNull: false},
     idencuesta: {type: DataTypes.INTEGER, allowNull: false},
-    idopcionencuesta: {type: DataTypes.INTEGER, allowNull: false},
+    idopcionencuesta: {type: DataTypes.INTEGER, allowNull: true},
     codigoempresa: {type: DataTypes.STRING(8), primaryKey: true, allowNull: true, validate: {notEmpty: true, len: [1,8]}},
     opcionmanual: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
     fecha: {type: DataTypes.DATE, allowNull: false, defaultValue: Date.now},

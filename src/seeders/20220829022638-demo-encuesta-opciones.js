@@ -22,17 +22,17 @@ module.exports = {
     ];
 
     let ids=[
-      4,
-      4,
-      4,
-      4,
-      4,
-      5,
-      5,
-      6,
-      6,
-      6,
-      6
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      3,
+      3,
+      3,
+      3
     ];
     for (let index = 0; index < opciones.length; index++) {
       elementos.push(
@@ -40,8 +40,8 @@ module.exports = {
           idencuesta: ids[index],
           opcion: opciones[index],
           idusuario: 1,
-          descripcion:  chance.sentence({words: 5}),
-          observacion: chance.sentence({words: 5})
+          descripcion:  chance.sentence({words: 10}),
+          observacion: chance.sentence({words: 10})
         }
       )
     }

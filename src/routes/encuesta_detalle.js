@@ -20,6 +20,7 @@ router.get('/count',encuesta_detalle.getEncuesta_DetallesCount)
 router.get('/range&limit=:limit?&offset=:offset',encuesta_detalle.getEncuesta_DetallesByLimitAndOffset)
 router.get('/id/:id',encuesta_detalle.getEncuesta_Detalle)
 router.post('/create',encuesta_detalle.createEncuesta_Detalle)
+router.post('/createAll',encuesta_detalle.createAllEncuesta_Detalle)
 router.put('/update',encuesta_detalle.updateEncuesta_Detalle)
 router.delete('/delete/:id', encuesta_detalle.deleteEncuesta_Detalle)
 
