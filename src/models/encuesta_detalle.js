@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     idopcionencuesta: { type: DataTypes.INTEGER, allowNull: true },
     codigoempresa: { type: DataTypes.STRING(8), primaryKey: true, allowNull: true, validate: { notEmpty: true, len: [1, 8] } },
     opcionmanual: { type: DataTypes.STRING(200), allowNull: true, validate: { notEmpty: true, len: [1, 200] } },
-    fecha: { type: DataTypes.DATE, allowNull: false, defaultValue: Date.now },
+    fecha: { type: DataTypes.DATEONLY, allowNull: false, defaultValue: Date.now },
     hora: { type: DataTypes.DATE, allowNull: false, defaultValue: Date.now },
 
     descripcion: { type: DataTypes.STRING(200), allowNull: true, validate: { notEmpty: true, len: [1, 200] } },
@@ -43,8 +43,10 @@ module.exports = (sequelize, DataTypes) => {
             where:
             {
               estado: 'A',
-              idopcionencuesta: this.idopcionencuesta,
-              idencuesta: this.idencuesta
+              codigoempresa: this.codigoempresa,
+              idencuesta: this.idencuesta,
+              fecha: this.fecha,
+
             }
           })
             .done(function (encuesta, err) {

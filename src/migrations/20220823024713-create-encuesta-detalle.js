@@ -29,7 +29,7 @@ module.exports = {
       idopcionencuesta: {type: Sequelize.INTEGER, allowNull: true},
       codigoempresa: {type: Sequelize.STRING(8), primaryKey: true, allowNull: true, validate: {notEmpty: true, len: [1,8]}},
       opcionmanual: {type: Sequelize.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
-      fecha: {type: Sequelize.DATE, allowNull: false, defaultValue: Date.now},
+      fecha: {type: Sequelize.DATEONLY, allowNull: false, defaultValue: Date.now},
       hora: {type: Sequelize.DATE, allowNull: false, defaultValue: Date.now},
 
       descripcion: {type: Sequelize.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},

@@ -43,7 +43,7 @@ async function getEncuesta_Detalle(req, res) {
 }
 
 async function createEncuesta_Detalle(req, res) {
-  console.log(req.body)
+  /* console.log(req.body) */
   let [err, encuesta_detalle] = await get(models.Encuesta_Detalle.create({
     idencuesta: req.body.idencuesta,
     idusuario: req.body.idusuario,
@@ -59,8 +59,21 @@ async function createEncuesta_Detalle(req, res) {
     ip: req.ip,
     usuario: 0
   }))
-  /* console.log(err) */
-  if (err) return res.status(500).json({ message: `${err}` })
+  if(err){
+    if (err.errors != null) {
+      for (let e = 0; e < err.errors.length; e++) {
+        const eError = err.errors[e];
+        if (eError) {
+          if (eError.path == 'isUnique'){
+            req.body.estado = 'R';
+            return res.status(200).json(req.body);
+          }
+          else return res.status(500).json({ message: `${err}` });
+        }
+      }
+    }
+  }
+  //if (err) return res.status(500).json({ message: `${err}` })
   if (encuesta_detalle == null) return res.status(404).json({ message: `Encuesta_Detalles nulos` })
   res.status(200).json(encuesta_detalle)
 }
@@ -112,14 +125,11 @@ async function migracion(req, res) {
       }
     ))
     if (err || encuesta_detalle == null) {
-      if (err.errors) {
-        console.log('entro');
+      if (err.errors != null) {
         for (let e = 0; e < err.errors.length; e++) {
           const eError = err.errors[e];
-          console.log('entr2');
           if (eError) {
             if (eError.path == 'isUnique'){
-              console.log('entro3')
               arreglo[i].estado = 'R';
             }
             else arreglo[i].estado = 'E';
