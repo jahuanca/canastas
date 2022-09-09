@@ -15,7 +15,8 @@ module.exports = {
     for (let index = 0; index < 0; index++) {
       elementos.push(
         {
-          periodo: '202201',
+          anio: '2022',
+          periodo: 'Setiembre',
           fechaInicio: Date.now(),
           fechaFin: Date.now(),
           titulo: titulos[index],

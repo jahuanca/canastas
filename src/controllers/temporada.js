@@ -1,6 +1,26 @@
 'use strict'
 const models = require('../models')
 
+async function getTemporadasCount(req, res) {
+  let [err, temporadas] = await get(models.Temporada.count({
+    where: { estado: 'A' },
+  }))
+  if (err) return res.status(500).json({ message: `${err}` })
+  if (temporadas == null) return res.status(404).json({ message: `Temporadas nulos` })
+  res.status(200).json(temporadas)
+}
+
+async function getTemporadasByLimitAndOffset(req, res) {
+  let [err, temporadas] = await get(models.Temporada.findAll({
+    where: { estado: 'A' },
+    offset: req.params.offset ? parseInt(req.params.offset) : 0,
+    limit: req.params.limit ? parseInt(req.params.limit) : 10,
+  }))
+  if (err) return res.status(500).json({ message: `${err}` })
+  if (temporadas == null) return res.status(404).json({ message: `Temporadas nulos` })
+  res.status(200).json(temporadas)
+}
+
 async function getTemporadas(req, res) {
   let [err, temporadas] = await get(models.Temporada.findAll({
     where:{estado: 'A'},
@@ -96,6 +116,8 @@ function get(promise) {
 }
 
 module.exports = {
+  getTemporadasCount,
+  getTemporadasByLimitAndOffset,
   getTemporadas,
   getTemporada,
   createTemporada,

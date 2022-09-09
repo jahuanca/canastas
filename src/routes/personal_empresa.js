@@ -22,6 +22,8 @@ router.get('/id/:id',personal_empresa.getPersonal_Empresa)
 router.post('/create',personal_empresa.createPersonal_Empresa)
 router.put('/update',personal_empresa.updatePersonal_Empresa)
 router.delete('/delete/:id', personal_empresa.deletePersonal_Empresa)
+router.get('/count',personal_empresa.getPersonalEmpresasCount)
+router.get('/range&?limit=:limit?&offset=:offset',personal_empresa.getPersonalEmpresasByLimitAndOffset)
 
 module.exports=router
 /** 

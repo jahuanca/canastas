@@ -18,6 +18,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.INTEGER
       },
+      anio: { type: Sequelize.STRING(200), allowNull: true, validate: { notEmpty: true, len: [1, 200] } },
       periodo: {type: Sequelize.STRING(100), allowNull: true, validate: {notEmpty: true, len: [1,100]}},
       fechaInicio: {type: Sequelize.DATE, allowNull: false},
       fechaFin: {type: Sequelize.DATE, allowNull: false},

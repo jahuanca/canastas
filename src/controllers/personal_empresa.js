@@ -100,6 +100,26 @@ async function deletePersonal_Empresa(req,res){
   res.status(200).json(personal_empresa[1][0].dataValues)
 }
 
+async function getPersonalEmpresasCount(req,res){
+  let [err,personal_empresas]=await get(models.PersonalEmpresa.count({
+    where:{estado: 'A'},
+  }))
+  if(err) return res.status(500).json({message: `${err}`})
+  if(personal_empresas==null) return res.status(404).json({message: `PersonalEmpresas nulos`})
+  res.status(200).json(personal_empresas)
+}
+
+async function getPersonalEmpresasByLimitAndOffset(req,res){
+  let [err,personal_empresas]=await get(models.PersonalEmpresa.findAll({
+    where:{estado: 'A'},
+    offset: req.params.offset ? parseInt(req.params.offset) : 0,
+    limit: req.params.limit ? parseInt(req.params.limit) : 10,
+  }))
+  if(err) return res.status(500).json({message: `${err}`})
+  if(personal_empresas==null) return res.status(404).json({message: `PersonalEmpresas nulos`})
+  res.status(200).json(personal_empresas)
+}
+
 
 function get(promise) {
   return promise.then(data => {
@@ -115,5 +135,8 @@ module.exports={
   getPersonal_Empresa,
   createPersonal_Empresa,
   updatePersonal_Empresa,
-  deletePersonal_Empresa
+  deletePersonal_Empresa,
+  getPersonalEmpresasCount,
+  getPersonalEmpresasByLimitAndOffset,
+
 }

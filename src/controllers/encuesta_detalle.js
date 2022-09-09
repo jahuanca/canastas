@@ -31,6 +31,16 @@ async function getEncuesta_Detalles(req, res) {
   res.status(200).json(encuesta_detalles)
 }
 
+async function getEncuesta_DetallesByIdEncuesta(req, res) {
+  let [err, encuesta_detalles] = await get(models.Encuesta_Detalle.findAll({
+    where: { estado: 'A', idencuesta: req.params.id },
+    include: [{ all: true }]  
+  }))
+  if (err) return res.status(500).json({ message: `${err}` })
+  if (encuesta_detalles == null) return res.status(404).json({ message: `Encuesta_Detalles nulos` })
+  res.status(200).json(encuesta_detalles)
+}
+
 async function getEncuesta_Detalle(req, res) {
   let [err, encuesta_detalle] = await get(models.Encuesta_Detalle.findOne({
     where: { id: req.params.id, estado: 'A' },
@@ -197,6 +207,7 @@ function get(promise) {
 
 module.exports = {
   getEncuesta_DetallesCount,
+  getEncuesta_DetallesByIdEncuesta,
   getEncuesta_DetallesByLimitAndOffset,
   getEncuesta_Detalles,
   getEncuesta_Detalle,

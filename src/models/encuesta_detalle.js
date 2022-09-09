@@ -66,5 +66,11 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'EncuestaDetalle'
     });
 
+    Encuesta_Detalle.associate = function(models) {
+      Encuesta_Detalle.belongsTo(models.Personal_Empresa, {foreignKey: "codigoempresa",targetKey: 'codigoempresa'});
+      Encuesta_Detalle.belongsTo(models.EncuestaOpcion, {foreignKey: "idopcionencuesta",})
+      /* Personal_Empresa.belongsTo(models.PersonalEmpresa_Subdivision, {foreignKey: "codigoempresa",targetKey: 'codigoempresa'}) */
+    };
+
   return Encuesta_Detalle;
 };

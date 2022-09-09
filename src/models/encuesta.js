@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     //add new parameters
     idusuario: {type: DataTypes.INTEGER, allowNull: false},
     idtipoencuesta: {type: DataTypes.INTEGER, allowNull: false},
+    anio: {type: DataTypes.STRING(200), allowNull: false, validate: {notEmpty: true, len: [1,200]}},
     periodo: {type: DataTypes.STRING(100), allowNull: true, validate: {notEmpty: true, len: [1,100]}},
     fechaInicio: {type: DataTypes.DATE, allowNull: false},
     fechaFin: {type: DataTypes.DATE, allowNull: false},

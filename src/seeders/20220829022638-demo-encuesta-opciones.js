@@ -34,7 +34,7 @@ module.exports = {
       3,
       3
     ];
-    for (let index = 0; index < opciones.length; index++) {
+    for (let index = 0; index < 0; index++) {
       elementos.push(
         {
           idencuesta: ids[index],
@@ -45,7 +45,7 @@ module.exports = {
         }
       )
     }
-    return models.EncuestaOpciones.bulkCreate(elementos, {
+    return models.EncuestaOpcion.bulkCreate(elementos, {
       individualHooks: true 
     }, {returning: true})
   },

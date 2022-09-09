@@ -3,12 +3,12 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class EncuestaOpciones extends Model {
+  class EncuestaOpcion extends Model {
     static associate(models) {
       
     }
   };
-  EncuestaOpciones.init({
+  EncuestaOpcion.init({
     //add new parameters
     idencuesta: {type: DataTypes.INTEGER, allowNull: false},
     idusuario: {type: DataTypes.INTEGER, allowNull: false},
@@ -28,9 +28,9 @@ module.exports = (sequelize, DataTypes) => {
     accion_usuario: {type: DataTypes.VIRTUAL}
   }, {
     sequelize,
-    modelName: 'EncuestaOpciones',
+    modelName: 'EncuestaOpcion',
     freezeTableName: true,
     tableName: 'EncuestaOpciones'
   });
-  return EncuestaOpciones;
+  return EncuestaOpcion;
 };
