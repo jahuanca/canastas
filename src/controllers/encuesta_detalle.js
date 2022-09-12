@@ -31,10 +31,25 @@ async function getEncuesta_Detalles(req, res) {
   res.status(200).json(encuesta_detalles)
 }
 
+async function getEncuesta_DetallesByRange(req, res) {
+  let [err, encuesta_detalles] = await get(models.Encuesta_Detalle.findAll({
+    where: {
+      estado: 'A',
+      idencuesta: req.body.id,
+      [models.Sequelize.Op.and]: [{ fecha: { [models.Sequelize.Op.gt]: req.body.inicio } },
+      { fecha: { [models.Sequelize.Op.lte]: req.body.fin } }]
+    },
+    include: [{ all: true }]
+  }))
+  if (err) return res.status(500).json({ message: `${err}` })
+  if (encuesta_detalles == null) return res.status(404).json({ message: `Encuesta_Detalles nulos` })
+  res.status(200).json(encuesta_detalles)
+}
+
 async function getEncuesta_DetallesByIdEncuesta(req, res) {
   let [err, encuesta_detalles] = await get(models.Encuesta_Detalle.findAll({
     where: { estado: 'A', idencuesta: req.params.id },
-    include: [{ all: true }]  
+    include: [{ all: true }]
   }))
   if (err) return res.status(500).json({ message: `${err}` })
   if (encuesta_detalles == null) return res.status(404).json({ message: `Encuesta_Detalles nulos` })
@@ -69,12 +84,12 @@ async function createEncuesta_Detalle(req, res) {
     ip: req.ip,
     usuario: 0
   }))
-  if(err){
+  if (err) {
     if (err.errors != null) {
       for (let e = 0; e < err.errors.length; e++) {
         const eError = err.errors[e];
         if (eError) {
-          if (eError.path == 'isUnique'){
+          if (eError.path == 'isUnique') {
             req.body.estado = 'R';
             return res.status(200).json(req.body);
           }
@@ -139,7 +154,7 @@ async function migracion(req, res) {
         for (let e = 0; e < err.errors.length; e++) {
           const eError = err.errors[e];
           if (eError) {
-            if (eError.path == 'isUnique'){
+            if (eError.path == 'isUnique') {
               arreglo[i].estado = 'R';
             }
             else arreglo[i].estado = 'E';
@@ -207,6 +222,7 @@ function get(promise) {
 
 module.exports = {
   getEncuesta_DetallesCount,
+  getEncuesta_DetallesByRange,
   getEncuesta_DetallesByIdEncuesta,
   getEncuesta_DetallesByLimitAndOffset,
   getEncuesta_Detalles,
