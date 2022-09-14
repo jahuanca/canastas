@@ -32,12 +32,14 @@ async function getEncuesta_Detalles(req, res) {
 }
 
 async function getEncuesta_DetallesByRange(req, res) {
+  let dInicio= new Date(req.body.inicio).setHours(0,0,0);
+  let dFin= new Date(req.body.fin).setHours(23,59,59);
   let [err, encuesta_detalles] = await get(models.Encuesta_Detalle.findAll({
     where: {
       estado: 'A',
       idencuesta: req.body.id,
-      [models.Sequelize.Op.and]: [{ fecha: { [models.Sequelize.Op.gt]: req.body.inicio } },
-      { fecha: { [models.Sequelize.Op.lte]: req.body.fin } }]
+      [models.Sequelize.Op.and]: [{ fecha: { [models.Sequelize.Op.gt]: dInicio } },
+      { fecha: { [models.Sequelize.Op.lte]: dFin } }]
     },
     include: [{ all: true }]
   }))
