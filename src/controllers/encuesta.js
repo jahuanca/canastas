@@ -24,6 +24,7 @@ async function getEncuestasByLimitAndOffset(req, res) {
 async function getEncuestas(req, res) {
   let [err, encuestas] = await get(models.Encuesta.findAll({
     where: { estado: 'A' },
+    order: [['fechaInicio', 'ASC']],
     /* include: [{ all: true }] */
   }))
   if (err) return res.status(500).json({ message: `${err}` })
@@ -36,7 +37,6 @@ async function getEncuesta(req, res) {
     where: { id: req.params.id, estado: 'A' },
     include: [{ all: true }]
   }))
-  console.log(err)
   if (err) return res.status(500).json({ message: `${err}` })
   if (encuesta == null) return res.status(404).json({ message: `Encuestas nulos` })
   res.status(200).json(encuesta)
@@ -69,7 +69,15 @@ async function createEncuesta(req, res) {
 
 async function updateEncuesta(req, res) {
   let [err, encuesta] = await get(models.Encuesta.update({
-    //all fields to update
+    idusuario: 1,
+    idtipoencuesta: 1,
+    periodo: req.body.periodo,
+    fechaInicio: req.body.fechaInicio,
+    fechaFin: req.body.fechaFin,
+    anio: req.body.anio,
+    titulo: req.body.titulo,
+    descripcion: req.body.descripcion,
+    observacion: req.body.observacion,
 
     accion: 'U',
     accion_usuario: 'Edito un encuesta.',
