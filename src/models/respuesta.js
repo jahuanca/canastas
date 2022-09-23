@@ -3,20 +3,22 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Encuesta extends Model {
+  class Respuesta extends Model {
     static associate(models) {
       
     }
   };
-  Encuesta.init({
+  Respuesta.init({
     //add new parameters
-    idusuario: {type: DataTypes.INTEGER, allowNull: false},
-    idtipoencuesta: {type: DataTypes.INTEGER, allowNull: false},
-    anio: {type: DataTypes.STRING(200), allowNull: false, validate: {notEmpty: true, len: [1,200]}},
-    periodo: {type: DataTypes.STRING(100), allowNull: true, validate: {notEmpty: true, len: [1,100]}},
-    fechaInicio: {type: DataTypes.DATE, allowNull: false},
-    fechaFin: {type: DataTypes.DATE, allowNull: false},
-    titulo: {type: DataTypes.STRING(100), allowNull: true, validate: {notEmpty: true, len: [1,100]}},
+    idsubdivision: { type: DataTypes.INTEGER, allowNull: false },
+    idusuario: { type: DataTypes.INTEGER, allowNull: false },
+    idencuesta: { type: DataTypes.INTEGER, allowNull: false },
+    idpregunta: { type: DataTypes.INTEGER, allowNull: false },
+    idopcion: { type: DataTypes.INTEGER, allowNull: true },
+    codigoempresa: { type: DataTypes.STRING(8), primaryKey: true, allowNull: true, validate: { notEmpty: true, len: [1, 8] } },
+    opcionmanual: { type: DataTypes.STRING(200), allowNull: true, validate: { notEmpty: true, len: [1, 200] } },
+    fecha: { type: DataTypes.DATEONLY, allowNull: false, defaultValue: Date.now },
+    hora: { type: DataTypes.DATE, allowNull: false, defaultValue: Date.now },
 
     descripcion: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
     observacion: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
@@ -33,14 +35,9 @@ module.exports = (sequelize, DataTypes) => {
     accion_usuario: {type: DataTypes.VIRTUAL}
   }, {
     sequelize,
-    modelName: 'Encuesta',
+    modelName: 'Respuesta',
     freezeTableName: true,
-    tableName: 'Encuesta'
+    tableName: 'Respuesta'
   });
-
-  Encuesta.associate = function(models) {
-    Encuesta.hasMany(models.Pregunta, {foreignKey: "idencuesta",targetKey: 'idencuesta'})
-  };
-
-  return Encuesta;
+  return Respuesta;
 };

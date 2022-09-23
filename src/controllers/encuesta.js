@@ -25,7 +25,11 @@ async function getEncuestas(req, res) {
   let [err, encuestas] = await get(models.Encuesta.findAll({
     where: { estado: 'A' },
     order: [['fechaInicio', 'ASC']],
-    /* include: [{ all: true }] */
+    include: [
+      {model: models.Pregunta, include: [
+        {model: models.Opcion}
+      ]}
+    ]
   }))
   if (err) return res.status(500).json({ message: `${err}` })
   if (encuestas == null) return res.status(404).json({ message: `Encuestas nulos` })

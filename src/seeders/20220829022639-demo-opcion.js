@@ -6,33 +6,33 @@ const chance=new Chance();
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    let titulos=[
-      'RENDIMIENTO MENSUAL',
-      'SATIFACCIÓN DEL CLIENTE',
-      'RIESGOS EN EL PROCESO',
-    ];
     let elementos=[];
-    for (let index = 0; index < titulos.length; index++) {
+    let opciones=[
+      'Muy malo',
+      'Malo',
+      'Regular',
+      'Bueno',
+      'Muy bueno',
+    ];
+
+
+    for (let index = 0; index < (opciones.length * 3 * 3); index++) {
       elementos.push(
         {
+          idpregunta: parseInt((index / opciones.length) + 1),
           idusuario: 1,
-          idtipoencuesta: 1,
-          anio: '2022',
-          periodo: 'Setiembre',
-          fechaInicio: Date.now(),
-          fechaFin: Date.now(),
-          titulo: titulos[index],
+          opcion: opciones[index % opciones.length],
           descripcion:  chance.sentence({words: 8}),
           observacion: chance.sentence({words: 8}),
         }
       )
     }
-    return models.Encuesta.bulkCreate(elementos, {
+    return models.Opcion.bulkCreate(elementos, {
       individualHooks: true 
     }, {returning: true})
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Encuesta', null, {});
+    return queryInterface.bulkDelete('Opcion', null, {});
   }
 };

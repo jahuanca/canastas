@@ -3,21 +3,24 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class EncuestaOpcion extends Model {
+  class Pregunta extends Model {
     static associate(models) {
       
     }
   };
-  EncuestaOpcion.init({
+  Pregunta.init({
     //add new parameters
-    idencuesta: {type: DataTypes.INTEGER, allowNull: false},
     idusuario: {type: DataTypes.INTEGER, allowNull: false},
-    opcion: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
+    idencuesta: {type: DataTypes.INTEGER, allowNull: false},
+    idtipopregunta: {type: DataTypes.INTEGER, allowNull: false},
+    pregunta: {type: DataTypes.STRING(100), allowNull: true, validate: {notEmpty: true, len: [1,100]}},
+
     descripcion: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
     observacion: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
     estado: {type: DataTypes.CHAR(1), allowNull: false, defaultValue: 'A',
       validate: {notEmpty: true, len: [1,1], isIn: [['A', 'I']], isAlpha: true}
     },
+    permitirOpcionManual: {type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true},
 
     createdAt: {type: DataTypes.DATE, allowNull: false, defaultValue: Date.now},
     updatedAt: {type: DataTypes.DATE, allowNull: true},
@@ -28,9 +31,14 @@ module.exports = (sequelize, DataTypes) => {
     accion_usuario: {type: DataTypes.VIRTUAL}
   }, {
     sequelize,
-    modelName: 'EncuestaOpcion',
+    modelName: 'Pregunta',
     freezeTableName: true,
-    tableName: 'EncuestaOpciones'
+    tableName: 'Pregunta'
   });
-  return EncuestaOpcion;
+
+  Pregunta.associate = function(models) {
+    Pregunta.hasMany(models.Opcion, {foreignKey: "idpregunta",targetKey: 'idpregunta'})
+  };
+  
+  return Pregunta;
 };
