@@ -20,12 +20,6 @@ module.exports = {
           key: 'idusuario',
         }
       },
-      idencuesta: {type: Sequelize.INTEGER, allowNull: false,
-        references: {
-          model: 'Encuesta',
-          key: 'id'
-        }
-      },
       idpregunta: {type: Sequelize.INTEGER, allowNull: false,
         references: {
           model: 'Pregunta',
@@ -40,6 +34,10 @@ module.exports = {
       },
       codigoempresa: {type: Sequelize.STRING(8), primaryKey: true, allowNull: true, validate: {notEmpty: true, len: [1,8]}},
       opcionmanual: {type: Sequelize.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
+      fecha: { type: Sequelize.DATEONLY, allowNull: false,},
+      hora: { type: Sequelize.DATE, allowNull: false,},
+      descripcion: {type: Sequelize.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
+      observacion: {type: Sequelize.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
       estado: {type: Sequelize.CHAR(1), allowNull: false, defaultValue: 'A'},
       createdAt: {
         allowNull: false,

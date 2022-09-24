@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     //add new parameters
     idsubdivision: { type: DataTypes.INTEGER, allowNull: false },
     idusuario: { type: DataTypes.INTEGER, allowNull: false },
-    idencuesta: { type: DataTypes.INTEGER, allowNull: false },
     idpregunta: { type: DataTypes.INTEGER, allowNull: false },
     idopcion: { type: DataTypes.INTEGER, allowNull: true },
     codigoempresa: { type: DataTypes.STRING(8), primaryKey: true, allowNull: true, validate: { notEmpty: true, len: [1, 8] } },
@@ -34,6 +33,30 @@ module.exports = (sequelize, DataTypes) => {
     ip: {type: DataTypes.VIRTUAL},
     accion_usuario: {type: DataTypes.VIRTUAL}
   }, {
+    validate: {
+      isUnique: function (done) {
+        //cuando se va modificar y crear id_cartera!=undefined
+        sequelize.models.Respuesta.count({
+          where:
+          {
+            estado: 'A',
+            codigoempresa: this.codigoempresa,
+            idpregunta: this.idpregunta,
+            fecha: this.fecha,
+
+          }
+        })
+          .done(function (encuesta, err) {
+            if (err) {
+              done(err);
+            }
+            if (encuesta > 0) {
+              done(new Error('Ya hay una respuesta con estos datos.'));
+            }
+            done();
+          });
+      }
+    },
     sequelize,
     modelName: 'Respuesta',
     freezeTableName: true,
