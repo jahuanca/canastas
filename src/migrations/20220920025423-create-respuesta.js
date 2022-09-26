@@ -32,6 +32,30 @@ module.exports = {
           key: 'id'
         }
       },
+      idunidad: {type: Sequelize.INTEGER, allowNull: true,
+        references: {
+          model: 'unidadnegocio',
+          key: 'idunidad'
+        }
+      },
+      idetapa: {type: Sequelize.INTEGER, allowNull: true,
+        references: {
+          model: 'encuesta_etapa',
+          key: 'idetapa'
+        }
+      },
+      idcampo: {type: Sequelize.INTEGER, allowNull: true,
+        references: {
+          model: 'encuesta_campo',
+          key: 'idcampo'
+        }
+      },
+      idturno: {type: Sequelize.INTEGER, allowNull: true,
+        references: {
+          model: 'encuesta_turno',
+          key: 'idturno'
+        }
+      },
       codigoempresa: {type: Sequelize.STRING(8), primaryKey: true, allowNull: true, validate: {notEmpty: true, len: [1,8]}},
       opcionmanual: {type: Sequelize.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
       fecha: { type: Sequelize.DATEONLY, allowNull: false,},

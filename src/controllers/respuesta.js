@@ -72,6 +72,10 @@ async function createAllRespuesta(req,res){
             codigoempresa: element.codigoempresa,
             opcionmanual: element.opcionmanual,
             fecha: element.fecha,
+            idunidad: element.idunidad,
+            idencuesta: element.idencuesta,
+            idcampo: element.idcampo,
+            idturno: element.idturno,
             hora: element.hora,
     
             descripcion: element.descripcion,
