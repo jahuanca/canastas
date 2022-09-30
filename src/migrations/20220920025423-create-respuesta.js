@@ -26,12 +26,6 @@ module.exports = {
           key: 'id'
         }
       },
-      idopcion: {type: Sequelize.INTEGER, allowNull: true,
-        references: {
-          model: 'Opcion',
-          key: 'id'
-        }
-      },
       idunidad: {type: Sequelize.INTEGER, allowNull: true,
         references: {
           model: 'unidadnegocio',
@@ -56,8 +50,7 @@ module.exports = {
           key: 'idturno'
         }
       },
-      codigoempresa: {type: Sequelize.STRING(8), primaryKey: true, allowNull: true, validate: {notEmpty: true, len: [1,8]}},
-      opcionmanual: {type: Sequelize.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
+      codigoempresa: {type: Sequelize.STRING(8), allowNull: true, validate: {notEmpty: true, len: [1,8]}},
       fecha: { type: Sequelize.DATEONLY, allowNull: false,},
       hora: { type: Sequelize.DATE, allowNull: false,},
       descripcion: {type: Sequelize.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},

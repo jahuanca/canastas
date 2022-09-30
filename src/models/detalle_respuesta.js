@@ -3,21 +3,17 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Respuesta extends Model {
+  class Detalle_Respuesta extends Model {
     static associate(models) {
       
     }
   };
-  Respuesta.init({
+  Detalle_Respuesta.init({
     //add new parameters
-    idsubdivision: { type: DataTypes.INTEGER, allowNull: false },
-    idusuario: { type: DataTypes.INTEGER, allowNull: false },
-    idpregunta: { type: DataTypes.INTEGER, allowNull: false },
-    idunidad: { type: DataTypes.INTEGER, allowNull: true },
-    idetapa: { type: DataTypes.INTEGER, allowNull: true },
-    idcampo: { type: DataTypes.INTEGER, allowNull: true },
-    idturno: { type: DataTypes.INTEGER, allowNull: true },
-    codigoempresa: { type: DataTypes.STRING(8), primaryKey: true, allowNull: true, validate: { notEmpty: true, len: [1, 8] } },
+    idrespuesta: {type: DataTypes.INTEGER, allowNull: false},
+    idusuario: {type: DataTypes.INTEGER, allowNull: false},
+    idopcion: { type: DataTypes.INTEGER, allowNull: true },
+    opcionmanual: { type: DataTypes.STRING(200), allowNull: true, validate: { notEmpty: true, len: [1, 200] } },
     fecha: { type: DataTypes.DATEONLY, allowNull: false, defaultValue: Date.now },
     hora: { type: DataTypes.DATE, allowNull: false, defaultValue: Date.now },
 
@@ -38,12 +34,12 @@ module.exports = (sequelize, DataTypes) => {
     validate: {
       isUnique: function (done) {
         //cuando se va modificar y crear id_cartera!=undefined
-        sequelize.models.Respuesta.count({
+        sequelize.models.Detalle_Respuesta.count({
           where:
           {
             estado: 'A',
-            codigoempresa: this.codigoempresa,
-            idpregunta: this.idpregunta,
+            idrespuesta: this.idrespuesta,
+            idopcion: this.idopcion,
             fecha: this.fecha,
 
           }
@@ -53,16 +49,16 @@ module.exports = (sequelize, DataTypes) => {
               done(err);
             }
             if (encuesta > 0) {
-              done(new Error('Ya hay una respuesta con estos datos.'));
+              done(new Error('Ya hay un detalle con estos datos.'));
             }
             done();
           });
       }
     },
     sequelize,
-    modelName: 'Respuesta',
+    modelName: 'Detalle_Respuesta',
     freezeTableName: true,
-    tableName: 'Respuesta'
+    tableName: 'Detalle_Respuesta'
   });
-  return Respuesta;
+  return Detalle_Respuesta;
 };

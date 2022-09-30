@@ -9,7 +9,7 @@
     "dev": "nodemon --max-old-space-size=6144 src/app.js",
     "unmigrate": "npx sequelize-cli db:migrate:undo:all",
     "migrate": "npx sequelize-cli db:migrate",
-    "unmigrateName": "npx sequelize-cli db:migrate:undo --name 20180704124934-create-branch.js",
+    "unmigrateDR": "npx sequelize-cli db:migrate:undo --name 20220928042229-create-detalle-respuesta.js & npx sequelize-cli db:migrate:undo --name 20220920025423-create-respuesta.js",
     "seed": "npx sequelize-cli db:seed:all",
     "db": "npx sequelize-cli db:migrate:undo:all & npx sequelize-cli db:migrate"
   },

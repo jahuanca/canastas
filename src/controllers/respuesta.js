@@ -60,20 +60,21 @@ async function createRespuesta(req, res) {
 async function createAllRespuesta(req, res) {
   let personalEncuesta = req.body;
   let arreglo = req.body.respuestas;
+  
   personalEncuesta.estadoLocal = 1;
 
   const t = await models.sequelize.transaction();
 
   for (let index = 0; index < arreglo.length; index++) {
     const element = arreglo[index];
-    if (element.estado == null || element.estado == 'R' ) {
+    if (element.id == null || element.estado == 'R' ) {
+      console.log('entroooooooooo');
+      console.log(element);
       let [err, respuesta] = await get(models.Respuesta.create({
         idsubdivision: 1,
         idusuario: 1,
         idpregunta: element.idpregunta,
-        idopcion: element.idopcion,
         codigoempresa: element.codigoempresa,
-        opcionmanual: element.opcionmanual,
         fecha: element.fecha,
         idunidad: element.idunidad,
         idencuesta: element.idencuesta,
@@ -96,9 +97,9 @@ async function createAllRespuesta(req, res) {
             const eError = err.errors[e];
             if (eError) {
               if (eError.path == 'isUnique') {
-                arreglo[index].estado = 'R';
-                element.estado='R';
+                arreglo[index].estado='R';
                 personalEncuesta.estadoLocal = -1;
+                continue;
               }
               else {
                 await t.rollback();
@@ -109,15 +110,34 @@ async function createAllRespuesta(req, res) {
           }
         }
       }
-      arreglo[index] = respuesta ?? element;
+      if(err) console.log(err);
+
+      for (let j = 0; j < element.detalles.length; j++) {
+        const d = element.detalles[j];
+        let [err2, detalle]= await get(
+          models.Detalle_Respuesta.create({
+            idrespuesta: respuesta['dataValues'].id,
+            idusuario: 1,
+            idopcion: d.idopcion,
+            opcionmanual: d.opcionmanual,
+            fecha: d.fecha,
+            hora: d.hora,
+            descripcion: d.descripcion,
+            observacion: d.observacion,
+          }), {validate: true, transaction: t}
+        );
+        if(err2) console.log(err2);
+        arreglo[index].detalles[j]=detalle;
+      }
+      arreglo[index].id=respuesta['dataValues']?.id ?? null;
       
     } else {
-      console.log('no inserto');
       arreglo[index]=element;
     }
   }
   await t.commit();
   personalEncuesta.respuestas = arreglo;
+  personalEncuesta.estado='A';
   res.status(200).json(personalEncuesta)
 }
 
