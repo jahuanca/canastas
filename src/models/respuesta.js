@@ -64,5 +64,10 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
     tableName: 'Respuesta'
   });
+
+  Respuesta.associate = function(models) {
+    Respuesta.belongsTo(models.Pregunta, {foreignKey: "idpregunta"})
+  };
+
   return Respuesta;
 };

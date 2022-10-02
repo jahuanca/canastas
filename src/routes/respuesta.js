@@ -17,6 +17,7 @@ const auth=require('../middlewares/auth') */
  */
 router.get('/',respuesta.getRespuestas)
 router.get('/count',respuesta.getRespuestasCount)
+router.get('/id_encuesta/:id',respuesta.getRespuestasOfEncuesta)
 router.get('/range&limit=:limit?&offset=:offset',respuesta.getRespuestasByLimitAndOffset)
 router.get('/id/:id',respuesta.getRespuesta)
 router.post('/create',respuesta.createRespuesta)

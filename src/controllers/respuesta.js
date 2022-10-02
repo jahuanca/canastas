@@ -32,6 +32,20 @@ async function getRespuestas(req, res) {
   res.status(200).json(respuestas)
 }
 
+async function getRespuestasOfEncuesta(req, res) {
+  let [err, respuestas] = await get(models.Respuesta.findAll({
+    where: { estado: 'A' },
+    attributes: ['Preguntum.idencuesta', 'idpregunta', 'codigoempresa'],
+    raw: true,
+    include: [
+      {model: models.Pregunta, where: {idencuesta: req.params.id}, attributes: [],}
+    ]
+  }))
+  if (err) return res.status(500).json({ message: `${err}` })
+  if (respuestas == null) return res.status(404).json({ message: `Respuestas nulos` })
+  res.status(200).json(respuestas)
+}
+
 async function getRespuesta(req, res) {
   let [err, respuesta] = await get(models.Respuesta.findOne({
     where: { id: req.params.id, estado: 'A' },
@@ -68,8 +82,6 @@ async function createAllRespuesta(req, res) {
   for (let index = 0; index < arreglo.length; index++) {
     const element = arreglo[index];
     if (element.id == null || element.estado == 'R' ) {
-      console.log('entroooooooooo');
-      console.log(element);
       let [err, respuesta] = await get(models.Respuesta.create({
         idsubdivision: 1,
         idusuario: 1,
@@ -194,6 +206,7 @@ module.exports = {
   getRespuestasCount,
   getRespuestasByLimitAndOffset,
   getRespuestas,
+  getRespuestasOfEncuesta,
   getRespuesta,
   createAllRespuesta,
   createRespuesta,
