@@ -31,6 +31,18 @@ async function getPreguntas(req,res){
   res.status(200).json(preguntas)
 }
 
+async function getPreguntasByIdEncuesta(req,res){
+  let [err,preguntas]=await get(models.Pregunta.findAll({
+    where:{estado: 'A', idencuesta: req.params.id},
+    include: [{
+      model: models.Opcion,
+    }] 
+  }))
+  if(err) return res.status(500).json({message: `${err}`})
+  if(preguntas==null) return res.status(404).json({message: `Preguntas nulos`})
+  res.status(200).json(preguntas)
+}
+
 async function getPregunta(req,res){
   let [err,pregunta]=await get(models.Pregunta.findOne({
     where:{id: req.params.id, estado: 'A'},
@@ -44,13 +56,19 @@ async function getPregunta(req,res){
 
 async function createPregunta(req,res){
   let [err,pregunta]=await get(models.Pregunta.create({
-       //all fields to insert
+      pregunta: req.body.pregunta,
+      descripcion: req.body.descripcion,
+      idtipopregunta: req.body.idtipopregunta,
+      permitirOpcionManual: req.body.permitirOpcionManual,
+      idencuesta: req.body.idencuesta,
+      idusuario: 1,
       
       accion: 'I',
       accion_usuario: 'Creo un nuevo pregunta.',
       ip: req.ip,
       usuario: 0
   }))
+  console.log(err);
   if(err) return res.status(500).json({message: `${err}`})
   if(pregunta==null) return res.status(404).json({message: `Preguntas nulos`})
   res.status(200).json(pregunta)
@@ -58,8 +76,13 @@ async function createPregunta(req,res){
 
 
 async function updatePregunta(req,res){
+  console.log(req.body);
   let [err,pregunta]=await get(models.Pregunta.update({
-    //all fields to update
+    pregunta: req.body.pregunta,
+    descripcion: req.body.descripcion,
+    idtipopregunta: req.body.idtipopregunta,
+    permitirOpcionManual: req.body.permitirOpcionManual,
+    idencuesta: req.body.idencuesta,
     
     accion: 'U',
     accion_usuario: 'Edito un pregunta.',
@@ -107,6 +130,7 @@ function get(promise) {
 
 module.exports={
   getPreguntasCount,
+  getPreguntasByIdEncuesta,
   getPreguntasByLimitAndOffset,
   getPreguntas,
   getPregunta,

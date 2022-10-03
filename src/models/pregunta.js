@@ -38,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Pregunta.associate = function(models) {
     Pregunta.hasMany(models.Opcion, {foreignKey: "idpregunta",targetKey: 'idpregunta'})
+    Pregunta.belongsTo(models.Encuesta, {foreignKey: "id"})
   };
   
   return Pregunta;
