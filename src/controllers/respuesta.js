@@ -38,7 +38,7 @@ async function getRespuestasOfEncuesta(req, res) {
     attributes: ['Preguntum.idencuesta', 'idpregunta', 'codigoempresa'],
     raw: true,
     include: [
-      {model: models.Pregunta, where: {idencuesta: req.params.id}, attributes: [],}
+      { model: models.Pregunta, where: { idencuesta: req.params.id }, attributes: [], }
     ]
   }))
   if (err) return res.status(500).json({ message: `${err}` })
@@ -74,14 +74,14 @@ async function createRespuesta(req, res) {
 async function createAllRespuesta(req, res) {
   let personalEncuesta = req.body;
   let arreglo = req.body.respuestas;
-  
+
   personalEncuesta.estadoLocal = 1;
 
   const t = await models.sequelize.transaction();
 
   for (let index = 0; index < arreglo.length; index++) {
     const element = arreglo[index];
-    if (element.id == null || element.estado == 'R' ) {
+    if (element.id == null || element.estado == 'R') {
       let [err, respuesta] = await get(models.Respuesta.create({
         idsubdivision: 1,
         idusuario: 1,
@@ -109,7 +109,7 @@ async function createAllRespuesta(req, res) {
             const eError = err.errors[e];
             if (eError) {
               if (eError.path == 'isUnique') {
-                arreglo[index].estado='R';
+                arreglo[index].estado = 'R';
                 personalEncuesta.estadoLocal = -1;
                 continue;
               }
@@ -122,11 +122,11 @@ async function createAllRespuesta(req, res) {
           }
         }
       }
-      if(err) console.log(err);
+      if (err) console.log(err);
 
       for (let j = 0; j < element.detalles.length; j++) {
         const d = element.detalles[j];
-        let [err2, detalle]= await get(
+        let [err2, detalle] = await get(
           models.Detalle_Respuesta.create({
             idrespuesta: respuesta['dataValues'].id,
             idusuario: 1,
@@ -136,23 +136,114 @@ async function createAllRespuesta(req, res) {
             hora: d.hora,
             descripcion: d.descripcion,
             observacion: d.observacion,
-          }), {validate: true, transaction: t}
+          }), { validate: true, transaction: t }
         );
-        if(err2) console.log(err2);
-        arreglo[index].detalles[j]=detalle;
+        if (err2) console.log(err2);
+        arreglo[index].detalles[j] = detalle;
       }
-      arreglo[index].id=respuesta['dataValues']?.id ?? null;
-      
+      arreglo[index].id = respuesta['dataValues']?.id ?? null;
+
     } else {
-      arreglo[index]=element;
+      arreglo[index] = element;
     }
   }
   await t.commit();
   personalEncuesta.respuestas = arreglo;
-  personalEncuesta.estado='A';
+  personalEncuesta.estado = 'A';
   res.status(200).json(personalEncuesta)
 }
 
+async function miracion(req, res) {
+  let contenido = req.body.content;
+
+  for (let k = 0; k < contenido.length; k++) {
+    const personalEncuesta = contenido[k];
+    let arreglo = personalEncuesta.respuestas;
+
+    personalEncuesta.estadoLocal = 1;
+
+    const t = await models.sequelize.transaction();
+
+    for (let index = 0; index < arreglo.length; index++) {
+      const element = arreglo[index];
+      if (element.id == null || element.estado == 'R') {
+        personalEncuesta.estado='A';
+        let [err, respuesta] = await get(models.Respuesta.create({
+          idsubdivision: 1,
+          idusuario: 1,
+          idpregunta: element.idpregunta,
+          codigoempresa: element.codigoempresa,
+          fecha: element.fecha,
+          idunidad: element.idunidad,
+          idencuesta: element.idencuesta,
+          idcampo: element.idcampo,
+          idetapa: element.idetapa,
+          idturno: element.idturno,
+          hora: element.hora,
+
+          descripcion: element.descripcion,
+          observacion: element.observacion,
+
+          accion: 'I',
+          accion_usuario: 'Creo un nuevo respuesta.',
+          ip: req.ip,
+          usuario: 0
+        }), { validate: true, transaction: t });
+        if (err) {
+          if (err.errors != null) {
+            for (let e = 0; e < err.errors.length; e++) {
+              const eError = err.errors[e];
+              if (eError) {
+                if (eError.path == 'isUnique') {
+                  arreglo[index].estado = 'R';
+                  personalEncuesta.estadoLocal = -1;
+                  personalEncuesta.estado = 'R';
+                }
+                else {
+                  await t.rollback();
+                  //console.log(err);
+                  return res.status(500).json({ message: `${err}` });
+                }
+              }
+            }
+          }
+        }
+        /* if (err) console.log(err); */
+        if(arreglo[index].estado = 'R'){
+          continue;
+        }
+
+        for (let j = 0; j < element.detalles.length; j++) {
+          const d = element.detalles[j];
+          let [err2, detalle] = await get(
+            models.Detalle_Respuesta.create({
+              idrespuesta: respuesta['dataValues'].id,
+              idusuario: 1,
+              idopcion: d.idopcion,
+              opcionmanual: d.opcionmanual,
+              fecha: d.fecha,
+              hora: d.hora,
+              descripcion: d.descripcion,
+              observacion: d.observacion,
+            }), { validate: true, transaction: t }
+          );
+          if (err2) console.log(err2);
+          arreglo[index].detalles[j] = detalle;
+        }
+        arreglo[index].id = respuesta['dataValues']?.id ?? null;
+
+      } else {
+        arreglo[index] = element;
+      }
+    }
+    await t.commit();
+    personalEncuesta.respuestas = arreglo;
+    
+    contenido[k]=personalEncuesta;
+  }
+  console.log(contenido);
+  res.status(200).json(contenido);
+}
 
 async function updateRespuesta(req, res) {
   let [err, respuesta] = await get(models.Respuesta.update({
@@ -206,6 +297,7 @@ module.exports = {
   getRespuestasCount,
   getRespuestasByLimitAndOffset,
   getRespuestas,
+  miracion,
   getRespuestasOfEncuesta,
   getRespuesta,
   createAllRespuesta,

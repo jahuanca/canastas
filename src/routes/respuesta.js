@@ -22,6 +22,7 @@ router.get('/range&limit=:limit?&offset=:offset',respuesta.getRespuestasByLimitA
 router.get('/id/:id',respuesta.getRespuesta)
 router.post('/create',respuesta.createRespuesta)
 router.post('/createAll',respuesta.createAllRespuesta)
+router.post('/migracion',respuesta.miracion)
 router.put('/update',respuesta.updateRespuesta)
 router.delete('/delete/:id', respuesta.deleteRespuesta)
 

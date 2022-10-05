@@ -88,7 +88,7 @@ async function createPregunta(req, res) {
     }))
 
     if (errOpcion) return res.status(500).json({ message: `${errOpcion}` })
-    req.body.Opcions[i]= opcion;
+    req.body.Opcions[i]= opcion.dataValues;
   }
   pregunta.Opcions=req.body.Opcions;
   res.status(200).json(pregunta)
