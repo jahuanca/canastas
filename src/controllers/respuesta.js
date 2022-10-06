@@ -83,8 +83,8 @@ async function createAllRespuesta(req, res) {
     const element = arreglo[index];
     if (element.id == null || element.estado == 'R') {
       let [err, respuesta] = await get(models.Respuesta.create({
-        idsubdivision: 1,
-        idusuario: 1,
+        idsubdivision: element.idsubdivision,
+        idusuario: element.idusuario,
         idpregunta: element.idpregunta,
         codigoempresa: element.codigoempresa,
         fecha: element.fecha,
@@ -129,7 +129,7 @@ async function createAllRespuesta(req, res) {
         let [err2, detalle] = await get(
           models.Detalle_Respuesta.create({
             idrespuesta: respuesta['dataValues'].id,
-            idusuario: 1,
+            idusuario: d.idusuario,
             idopcion: d.idopcion,
             opcionmanual: d.opcionmanual,
             fecha: d.fecha,
@@ -153,7 +153,7 @@ async function createAllRespuesta(req, res) {
   res.status(200).json(personalEncuesta)
 }
 
-async function miracion(req, res) {
+async function migracion(req, res) {
   let contenido = req.body.content;
 
   for (let k = 0; k < contenido.length; k++) {
@@ -169,8 +169,8 @@ async function miracion(req, res) {
       if (element.id == null || element.estado == 'R') {
         personalEncuesta.estado='A';
         let [err, respuesta] = await get(models.Respuesta.create({
-          idsubdivision: 1,
-          idusuario: 1,
+          idsubdivision: element.idsubdivision,
+          idusuario: element.idusuario,
           idpregunta: element.idpregunta,
           codigoempresa: element.codigoempresa,
           fecha: element.fecha,
@@ -198,6 +198,7 @@ async function miracion(req, res) {
                   arreglo[index].estado = 'R';
                   personalEncuesta.estadoLocal = -1;
                   personalEncuesta.estado = 'R';
+                  console.log('respuesta repetida');
                 }
                 else {
                   await t.rollback();
@@ -209,7 +210,7 @@ async function miracion(req, res) {
           }
         }
         /* if (err) console.log(err); */
-        if(arreglo[index].estado = 'R'){
+        if(arreglo[index].estado == 'R'){
           continue;
         }
 
@@ -218,7 +219,7 @@ async function miracion(req, res) {
           let [err2, detalle] = await get(
             models.Detalle_Respuesta.create({
               idrespuesta: respuesta['dataValues'].id,
-              idusuario: 1,
+              idusuario: d.idusuario,
               idopcion: d.idopcion,
               opcionmanual: d.opcionmanual,
               fecha: d.fecha,
@@ -228,6 +229,26 @@ async function miracion(req, res) {
             }), { validate: true, transaction: t }
           );
           if (err2) console.log(err2);
+          if (err2) {
+            if (err2.errors != null) {
+              for (let e = 0; e < err2.errors.length; e++) {
+                const eError = err2.errors[e];
+                if (eError) {
+                  if (eError.path == 'isUnique') {
+                    arreglo[index].estado = 'R';
+                    personalEncuesta.estadoLocal = -1;
+                    personalEncuesta.estado = 'R';
+                    console.log('detalle repetido');
+                  }
+                  else {
+                    await t.rollback();
+                    //console.log(err);
+                    return res.status(500).json({ message: `${err}` });
+                  }
+                }
+              }
+            }
+          }
           arreglo[index].detalles[j] = detalle;
         }
         arreglo[index].id = respuesta['dataValues']?.id ?? null;
@@ -238,10 +259,9 @@ async function miracion(req, res) {
     }
     await t.commit();
     personalEncuesta.respuestas = arreglo;
-    
     contenido[k]=personalEncuesta;
   }
-  console.log(contenido);
+  /* console.log(contenido); */
   res.status(200).json(contenido);
 }
 
@@ -297,7 +317,7 @@ module.exports = {
   getRespuestasCount,
   getRespuestasByLimitAndOffset,
   getRespuestas,
-  miracion,
+  migracion,
   getRespuestasOfEncuesta,
   getRespuesta,
   createAllRespuesta,
