@@ -45,7 +45,6 @@ module.exports = (sequelize, DataTypes) => {
             codigoempresa: this.codigoempresa,
             idpregunta: this.idpregunta,
             fecha: this.fecha,
-
           }
         })
           .done(function (encuesta, err) {

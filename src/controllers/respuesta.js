@@ -87,7 +87,7 @@ async function createAllRespuesta(req, res) {
         idusuario: element.idusuario,
         idpregunta: element.idpregunta,
         codigoempresa: element.codigoempresa,
-        fecha: element.fecha,
+        fecha: new Date(element.fecha),
         idunidad: element.idunidad,
         idencuesta: element.idencuesta,
         idcampo: element.idcampo,
@@ -129,16 +129,20 @@ async function createAllRespuesta(req, res) {
         let [err2, detalle] = await get(
           models.Detalle_Respuesta.create({
             idrespuesta: respuesta['dataValues'].id,
-            idusuario: d.idusuario,
-            idopcion: d.idopcion,
+            idusuario: d.idusuario ?? 1,
+            idopcion: (d.idopcion == -1) ? null : d.idopcion,
             opcionmanual: d.opcionmanual,
-            fecha: d.fecha,
+            fecha: new Date(d.fecha),
             hora: d.hora,
             descripcion: d.descripcion,
             observacion: d.observacion,
           }), { validate: true, transaction: t }
         );
-        if (err2) console.log(err2);
+        if (err2){
+          console.log('Error 2');
+          console.log(err2);
+          await t.rollback();
+        }
         arreglo[index].detalles[j] = detalle;
       }
       arreglo[index].id = respuesta['dataValues']?.id ?? null;
@@ -173,7 +177,7 @@ async function migracion(req, res) {
           idusuario: element.idusuario,
           idpregunta: element.idpregunta,
           codigoempresa: element.codigoempresa,
-          fecha: element.fecha,
+          fecha: new Date(element.fecha?.toDateString()),
           idunidad: element.idunidad,
           idencuesta: element.idencuesta,
           idcampo: element.idcampo,
@@ -222,7 +226,7 @@ async function migracion(req, res) {
               idusuario: d.idusuario,
               idopcion: d.idopcion,
               opcionmanual: d.opcionmanual,
-              fecha: d.fecha,
+              fecha: new Date(d.fecha?.toDateString()),
               hora: d.hora,
               descripcion: d.descripcion,
               observacion: d.observacion,
