@@ -26,8 +26,8 @@ async function getEncuestas(req, res) {
     where: { estado: 'A' },
     order: [['fechaInicio', 'ASC']],
     include: [
-      {model: models.Pregunta, include: [
-        {model: models.Opcion}
+      {model: models.Pregunta, where: {estado: 'A'} ,  include: [
+        {model: models.Opcion, where: {estado: 'A'}}
       ]}
     ]
   }))
