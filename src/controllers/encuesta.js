@@ -22,12 +22,13 @@ async function getEncuestasByLimitAndOffset(req, res) {
 }
 
 async function getEncuestas(req, res) {
+  console.log('aqui paso')
   let [err, encuestas] = await get(models.Encuesta.findAll({
     where: { estado: 'A' },
-    order: [['fechaInicio', 'ASC']],
+    order: [['fechaInicio', 'ASC'], [{model: models.Pregunta}, 'id', 'ASC']],
     include: [
-      {model: models.Pregunta, where: {estado: 'A'} ,  include: [
-        {model: models.Opcion, where: {estado: 'A'}}
+      { model: models.Pregunta , where: {estado: 'A'} ,include: [
+        {model: models.Opcion, where: {estado: 'A'}, required: false}
       ]}
     ]
   }))

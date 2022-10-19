@@ -35,7 +35,7 @@ async function getPreguntasByIdEncuesta(req, res) {
   let [err, preguntas] = await get(models.Pregunta.findAll({
     where: { estado: 'A', idencuesta: req.params.id },
     include: [{
-      model: models.Opcion, where: {estado: 'A'}
+      model: models.Opcion, required: false ,where: {estado: 'A'}
     }]
   }))
   if (err) return res.status(500).json({ message: `${err}` })

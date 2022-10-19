@@ -21,7 +21,7 @@ module.exports = {
         }
       },
       idtipopregunta: {type: Sequelize.INTEGER, allowNull: false},
-      pregunta: {type: Sequelize.STRING(100), allowNull: true, validate: {notEmpty: true, len: [1,100]}},
+      pregunta: {type: Sequelize.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,100]}},
 
       descripcion: {type: Sequelize.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
       observacion: {type: Sequelize.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},

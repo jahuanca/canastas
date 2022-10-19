@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     idusuario: {type: DataTypes.INTEGER, allowNull: false},
     idencuesta: {type: DataTypes.INTEGER, allowNull: false},
     idtipopregunta: {type: DataTypes.INTEGER, allowNull: false},
-    pregunta: {type: DataTypes.STRING(100), allowNull: true, validate: {notEmpty: true, len: [1,100]}},
+    pregunta: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,100]}},
 
     descripcion: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
     observacion: {type: DataTypes.STRING(200), allowNull: true, validate: {notEmpty: true, len: [1,200]}},
