@@ -224,7 +224,7 @@ async function migracion(req, res) {
             models.Detalle_Respuesta.create({
               idrespuesta: respuesta['dataValues'].id,
               idusuario: d.idusuario,
-              idopcion: d.idopcion,
+              idopcion: (d.idopcion == -1) ? null : d.idopcion,
               opcionmanual: d.opcionmanual,
               fecha: new Date(d.fecha),
               hora: d.hora,
