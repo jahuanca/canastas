@@ -16,6 +16,7 @@ const auth=require('../middlewares/auth') */
  *        description: A successful response
  */
 router.get('/',encuesta.getEncuestas)
+router.get('/report/:id',encuesta.getEncuestasReport)
 router.get('/count',encuesta.getEncuestasCount)
 router.get('/range&limit=:limit?&offset=:offset',encuesta.getEncuestasByLimitAndOffset)
 router.get('/id/:id',encuesta.getEncuesta)

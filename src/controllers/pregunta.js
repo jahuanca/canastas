@@ -55,7 +55,6 @@ async function getPregunta(req, res) {
 }
 
 async function createPregunta(req, res) {
-  console.log(req.body);
 
   let [err, pregunta] = await get(models.Pregunta.create({
     pregunta: req.body.pregunta,
@@ -96,7 +95,6 @@ async function createPregunta(req, res) {
 
 
 async function updatePregunta(req, res) {
-  console.log(req.body);
   let [err, pregunta] = await get(models.Pregunta.update({
     pregunta: req.body.pregunta,
     descripcion: req.body.descripcion,

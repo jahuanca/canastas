@@ -37,6 +37,15 @@ async function getEncuestas(req, res) {
   res.status(200).json(encuestas)
 }
 
+async function getEncuestasReport(req, res) {
+  
+  let [err, encuestas] = await get(models.sequelize.query('EXEC ListarReporte_EncuestaDinamica :id' ,
+       {replacements: { id: req.params.id}}))
+  if (err) return res.status(500).json({ message: `${err}` })
+  if (encuestas == null) return res.status(404).json({ message: `Encuestas nulos` })
+  res.status(200).json(encuestas)
+}
+
 async function getEncuesta(req, res) {
   let [err, encuesta] = await get(models.Encuesta.findOne({
     where: { id: req.params.id, estado: 'A' },
@@ -132,6 +141,7 @@ module.exports = {
   getEncuestasCount,
   getEncuestasByLimitAndOffset,
   getEncuestas,
+  getEncuestasReport,
   getEncuesta,
   createEncuesta,
   updateEncuesta,
