@@ -131,7 +131,7 @@ async function createAllRespuesta(req, res) {
             idrespuesta: respuesta['dataValues'].id,
             idusuario: d.idusuario ?? 1,
             idopcion: (d.idopcion == -1) ? null : d.idopcion,
-            opcionmanual: d.opcionmanual,
+            opcionmanual: (d.idopcion == -1) ? d.opcionmanual : null,
             fecha: new Date(d.fecha),
             hora: d.hora,
             descripcion: d.descripcion,
@@ -159,7 +159,8 @@ async function createAllRespuesta(req, res) {
 
 async function migracion(req, res) {
   let contenido = req.body.content;
-
+  //console.log(req.body.content[0].respuestas[req.body.content[0].respuestas.length-1].detalles);
+  //return;
   for (let k = 0; k < contenido.length; k++) {
     const personalEncuesta = contenido[k];
     let arreglo = personalEncuesta.respuestas;
@@ -225,7 +226,7 @@ async function migracion(req, res) {
               idrespuesta: respuesta['dataValues'].id,
               idusuario: d.idusuario,
               idopcion: (d.idopcion == -1) ? null : d.idopcion,
-              opcionmanual: d.opcionmanual,
+              opcionmanual: (d.idopcion == -1) ? d.opcionmanual : null,
               fecha: new Date(d.fecha),
               hora: d.hora,
               descripcion: d.descripcion,
