@@ -38,11 +38,11 @@ async function getEncuestas(req, res) {
 }
 
 async function getEncuestasReport(req, res) {
-  
   let [err, encuestas] = await get(models.sequelize.query('EXEC ListarReporte_EncuestaDinamica :id' ,
-       {replacements: { id: req.params.id}}))
+       {replacements: { id: req.params.id}, type: models.Sequelize.QueryTypes.SELECT }))
   if (err) return res.status(500).json({ message: `${err}` })
   if (encuestas == null) return res.status(404).json({ message: `Encuestas nulos` })
+  console.log(encuestas);
   res.status(200).json(encuestas)
 }
 
